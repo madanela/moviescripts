@@ -1,0 +1,9 @@
+*.tsv
+
+*.csv
+
+*.txt
+
+!data/raw/MovieDialogCorpus/README.txt
+
+*.pdf
