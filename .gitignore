@@ -11,3 +11,6 @@
 
 !data/raw/MovieDialogCorpus/README.txt
 
+.ipynb_checkpoints
+
+moviescripts
