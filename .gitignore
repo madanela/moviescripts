@@ -1,9 +1,13 @@
+# Ignore file types
+
+
 *.tsv
 
 *.csv
+
+*.pdf
 
 *.txt
 
 !data/raw/MovieDialogCorpus/README.txt
 
-*.pdf
