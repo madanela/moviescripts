@@ -14,5 +14,10 @@
 .ipynb_checkpoints
 
 moviescripts
+# Testing
 
-*.DS_Store
+Tests
+
+# macOS
+
+.DS_Store
