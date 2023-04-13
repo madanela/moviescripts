@@ -21,3 +21,18 @@ Tests
 # macOS
 
 .DS_Store
+
+
+# vocab
+
+*.bin
+*.gz
+
+# saved model
+jupyter_for_experiments/saved_model
+jupyter_for_experiments/saved_model.pt
+
+# models
+ *.pt
+
+
