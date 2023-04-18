@@ -1,0 +1,2 @@
+pyenv local moviescripts
+pyenv activate moviescripts

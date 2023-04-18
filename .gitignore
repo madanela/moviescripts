@@ -13,7 +13,7 @@
 
 .ipynb_checkpoints
 
-moviescripts
+moviescripts_env
 # Testing
 
 Tests
@@ -36,3 +36,5 @@ jupyter_for_experiments/saved_model.pt
  *.pt
 
 
+# chache
+__pycache__/

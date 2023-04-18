@@ -1,0 +1,36 @@
+general:
+  seed: null
+  project_name: moviescripts
+  workspace: alen.am0161
+  experiment_name: baseline
+
+  save_dir: saved/${general.experiment_name}/${now:%Y-%m-%d_%H%M}
+
+  experiment_id: ??? # commit[:8], or unique from logger
+  version: ??? # md5[:8] of config
+  gpus: -1
+
+defaults:
+  - model: BertClassifer
+  - loss: cross_entropy
+  # - data: indoor
+  # - data/data_loaders: simple_loader
+  # - data/datasets: scannet
+  # - data/collation_functions: voxelize_collate
+  # - logging: base
+  # - teacher_model: baseline
+  # - student_model: half
+  # - metrics: miou
+  # - optimizer: adamw
+  # - scheduler: onecyclelr
+  # - trainer: trainer
+  # - callbacks: callbacks
+  # - loss: cross_entropy
+
+hydra:
+  run:
+    dir: saved/hydra_logs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: saved/hydra_logs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    # dir: ${general.save_dir}
+    subdir: ${hydra.job.num}_${hydra.job.id}
