@@ -1,4 +1,4 @@
-"""smaller3d"""
+"""moviescripts"""
 
 try:
     from importlib.metadata import version, PackageNotFoundError
