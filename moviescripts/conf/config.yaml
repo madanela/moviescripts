@@ -26,7 +26,7 @@ defaults:
   # - teacher_model: baseline
   # - student_model: half
   - metrics: acc
-  
+  - tokenizer: BertUncased
   - optimizer: adamw
   - scheduler: onecyclelr
   - trainer: trainer

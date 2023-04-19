@@ -42,3 +42,5 @@ __pycache__/
 
 # Data
 /saved
+/data/raw
+/data/processed

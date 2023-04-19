@@ -7,26 +7,35 @@ from torch.utils.data import Dataset
 from moviescripts.datasets.augmentation import AddNoise
 
 import pandas as pd
-
+import numpy as np
 
 
 class TextClassificationDataset(Dataset):
-    def __init__(self, data_dir, tokenizer,augment: Optional[str] = None,mode: Optional[str] = "train",):
-        print("heeey")
+    def __init__(self, data_dir, 
+                 tokenizer,augment: Optional[str] = None,
+                 mode: Optional[str] = "train"):
+
         df = pd.read_csv(data_dir)
+
         self.X = df.X
         self.y = df.y
         self.tokenizer = tokenizer
         self.augment = augment
 
+        # if working only on classes for validation - discard others
+
+
     def __len__(self):
         return len(self.X)
 
     def __getitem__(self, idx):
+        text = str(self.X[idx])
         if self.augment:
-            text = self.augment(str(self.X[idx]), p = .8)
+            text = self.augment(text, p = .8)
+
         # text = AddNoise(str(self.X[idx]), p = .8)
         label = self.y[idx]
+
         encoding = self.tokenizer(
             text, 
             add_special_tokens=True, 
@@ -40,3 +49,12 @@ class TextClassificationDataset(Dataset):
         attention_mask = encoding['attention_mask'].squeeze()
 
         return input_ids, attention_mask, torch.tensor(label)
+    @property
+    def data(self):
+        """ database file containing information about preproscessed dataset """
+        return self._data
+
+    @property
+    def label_info(self):
+        """ database file containing information labels used by dataset """
+        return self.y

@@ -10,6 +10,7 @@ class BertSentenceClassifier(nn.Module):
 
         # self.bert_freezed =  BertForPreTraining.from_pretrained('distilbert-base-uncased') #BertForSequenceClassification.from_pretrained('bert-base-uncased', problem_type="multi_label_classification")
         self.bert_training = BertForPreTraining.from_pretrained('distilbert-base-uncased') #BertForSequenceClassification.from_pretrained('bert-base-uncased', problem_type="multi_label_classification")
+        #BertForSequenceClassification.from_pretrained("bert-base-uncased", problem_type="multi_label_classification")
         # for param in self.bert_freezed.parameters():
         #     param.requires_grad = False
         self.dropout_rate = 0.1

@@ -45,67 +45,62 @@ class SentenceClassifier(pl.LightningModule):
         self.iou = Accuracy()
         # misc
         self.labels_info = dict()
-        print("ok2")
-        print(f"{config.data.num_labels=}")
+
         self.criterion = hydra.utils.instantiate(config.loss)
         # self.bert_freezed =  BertForPreTraining.from_pretrained('distilbert-base-uncased') #BertForSequenceClassification.from_pretrained('bert-base-uncased', problem_type="multi_label_classification")
-        print("ok2")
-        self.bert_training = BertForPreTraining.from_pretrained('distilbert-base-uncased') #BertForSequenceClassification.from_pretrained('bert-base-uncased', problem_type="multi_label_classification")
-        # for param in self.bert_freezed.parameters():
-        #     param.requires_grad = False
-        self.dropout_rate = 0.1
-        self.lin1 = nn.Linear(768, 256)
-        self.lin_layers = nn.ModuleList([nn.Linear(256, 256) for i in range(4)])
-        self.lin2 = nn.Linear(256, config.data.num_labels)
+        
+        # model
+        self.model = hydra.utils.instantiate(config.model)
+
+        self.labels_info = dict()
 
     def forward(self, input_ids, attention_mask):
-        # bert_1 = self.bert_freezed(input_ids=input_ids, attention_mask=attention_mask)
-        bert_2 = self.bert_training(input_ids=input_ids, attention_mask=attention_mask)
 
-        print("bert passed!!!")
-        x = nn.functional.relu(self.lin1(bert_2.prediction_logits))
-        print("x passed!!!")
+        x = self.model(input_ids,attention_mask)
 
-        x = nn.functional.dropout(x, self.dropout_rate)
-        print("x passed!!!")
-
-        for lin_layer in self.lin_layers:
-            print("x passed!!!")
-
-            x = nn.functional.relu(lin_layer(x))
-            x = nn.functional.dropout(x, self.dropout_rate)
-        print("x passed!!!")
-
-        x = self.lin2(x)
         return x
     def training_step(self, batch, batch_idx):
-        data, target = batch
-        data.to(self.device)
-        output = self.forward(data.input_ids,data.attention_mask)
+        print("training step!!!")
+        print(batch)
+        input_ids = batch[0]
+        attention_mask = batch[1]
+        target = batch[2]
+
+
+        input_ids.to(self.device)
+        attention_mask.to(self.device)
+
+        
+        output = self.forward(input_ids,attention_mask)
         loss = self.criterion(output.F, target).unsqueeze(0)
 
         return {
             "loss": loss,
         }
     def validation_step(self, batch, batch_idx):
-        data, target = batch
-        inverse_maps = data.inverse_maps
-        original_labels = data.original_labels
-        data.to(self.device)
-        output = self.forward(data.input_ids,data.attention_mask)
+        print("validation step!!!")
+        input_ids = batch[0]
+        attention_mask = batch[1]
+        target = batch[2]
+        # data, target = batch
+  
+        input_ids.to(self.device)
+        attention_mask.to(self.device)
+
+        output = self.forward(input_ids,attention_mask)
         loss = self.criterion(output.F, target).unsqueeze(0)
 
-        # getting original labels
-        ordered_output = []
-        for i in range(len(inverse_maps)):
-            # https://github.com/NVIDIA/MinkowskiEngine/issues/119
-            ordered_output.append(output.F[output.C[:, 0] == i])
-        output = ordered_output
-        for i, (out, inverse_map) in enumerate(zip(output, inverse_maps)):
-            out = out.max(1)[1].view(-1).detach().cpu()
-            output[i] = out[inverse_map].numpy()
+        # # getting original labels
+        # ordered_output = []
+        # for i in range(len(inverse_maps)):
+        #     # https://github.com/NVIDIA/MinkowskiEngine/issues/119
+        #     ordered_output.append(output.F[output.C[:, 0] == i])
+        # output = ordered_output
+        # for i, (out, inverse_map) in enumerate(zip(output, inverse_maps)):
+        #     out = out.max(1)[1].view(-1).detach().cpu()
+        #     output[i] = out[inverse_map].numpy()
 
-        self.confusion.add(np.hstack(output), np.hstack(original_labels))
+        # self.confusion.add(np.hstack(output), np.hstack(original_labels))
         return {
             "val_loss": loss,
         }
@@ -133,21 +128,21 @@ class SentenceClassifier(pl.LightningModule):
         self.labels_info = self.train_dataset.label_info
 
     def train_dataloader(self):
-        c_fn = hydra.utils.instantiate(self.config.data.train_collation)
+        # c_fn = hydra.utils.instantiate(self.config.data.train_collation)
         return hydra.utils.instantiate(
-            self.config.data.train_dataloader, self.train_dataset, collate_fn=c_fn,
+            self.config.data.train_dataloader, self.train_dataset, #collate_fn=c_fn,
         )
 
     def val_dataloader(self):
-        c_fn = hydra.utils.instantiate(self.config.data.validation_collation)
+        # c_fn = hydra.utils.instantiate(self.config.data.validation_collation)
         return hydra.utils.instantiate(
             self.config.data.validation_dataloader,
             self.validation_dataset,
-            collate_fn=c_fn,
+            # collate_fn=c_fn,
         )
 
     def test_dataloader(self):
-        c_fn = hydra.utils.instantiate(self.config.data.test_collation)
+        # c_fn = hydra.utils.instantiate(self.config.data.test_collation)
         return hydra.utils.instantiate(
-            self.config.data.test_dataloader, self.test_dataset, collate_fn=c_fn,
+            self.config.data.test_dataloader, self.test_dataset, #collate_fn=c_fn,
         )

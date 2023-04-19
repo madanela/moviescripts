@@ -1,0 +1,16 @@
+schema: '2.0'
+stages:
+  starwars:
+    cmd: poetry run python moviescripts/datasets/preprocessing/starwars_preprocessing.py
+      preprocess  --data_dir=data/raw/starwars --out_dir=data/processed/starwars
+    deps:
+    - path: moviescripts/datasets/preprocessing/starwars_preprocessing.py
+      md5: 6564f18aafc31d42d46880d53dc5381f
+      size: 2869
+    outs:
+    - path: data/processed/starwars/train.csv
+      md5: e75b50812af30f304243a3192dc8cfc9
+      size: 119093
+    - path: data/processed/starwars/val.csv
+      md5: 53fd9380576b38030078de0eb84d7507
+      size: 30742

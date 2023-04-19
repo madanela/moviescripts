@@ -1,8 +1,8 @@
 # @package data
 train_dataset:
   _target_: moviescripts.datasets.classification.TextClassificationDataset
-  data_dir: data/processed/starwars
-  tokenizer: transformers.BertTokenizer.from_pretrained("bert-base-uncased")
+  data_dir: data/processed/starwars/train.csv
+  tokenizer: ${tokenizer}
 
   # label_db_filepath: data/processed/starwars/label_database.yaml
   mode: ${data.train_mode}
@@ -10,8 +10,8 @@ train_dataset:
 
 validation_dataset:
   _target_: moviescripts.datasets.classification.TextClassificationDataset
-  data_dir: data/processed/starwars
-  tokenizer: transformers.BertTokenizer.from_pretrained("bert-base-uncased")
+  data_dir: data/processed/starwars/val.csv
+  tokenizer: ${tokenizer}
   # label_db_filepath: data/processed/starwars/label_database.yaml
   mode: ${data.validation_mode}
   # num_labels: ${data.num_labels}
@@ -19,8 +19,8 @@ validation_dataset:
 
 test_dataset:
   _target_: moviescripts.datasets.classification.TextClassificationDataset
-  data_dir: data/processed/starwars
-  tokenizer: transformers.BertTokenizer.from_pretrained("bert-base-uncased")
+  data_dir: data/processed/starwars/val.csv
+  tokenizer: ${tokenizer}
 
   # label_db_filepath: data/processed/starwars/label_database.yaml
   mode: ${data.test_mode}

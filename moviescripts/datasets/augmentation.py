@@ -3,10 +3,11 @@ import os, pickle, numpy as np, fasttext.util, nltk, random
 from nltk.corpus import wordnet
 
 
-nltk.download('wordnet')
 
 class AddNoise:
     def __init__(self, p=0.2 ,dict_path = 'dict_of_words.pickle', cfg: Optional[str] = None):
+        nltk.download('wordnet')
+
         self.dict_of_synonyms = self.load_dict_of_synonyms(dict_path)
         self.p = p
         self.cfg = cfg

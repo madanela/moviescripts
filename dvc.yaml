@@ -1,0 +1,10 @@
+stages:
+  starwars:
+    cmd: poetry run python moviescripts/datasets/preprocessing/starwars_preprocessing.py
+      preprocess  --data_dir=data/raw/starwars
+      --out_dir=data/processed/starwars
+    deps:
+    - moviescripts/datasets/preprocessing/starwars_preprocessing.py
+    outs:
+    - data/processed/starwars/train.csv
+    - data/processed/starwars/val.csv
