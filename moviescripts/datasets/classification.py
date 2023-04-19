@@ -6,13 +6,16 @@ import torch
 from torch.utils.data import Dataset
 from moviescripts.datasets.augmentation import AddNoise
 
+import pandas as pd
 
 
 
 class TextClassificationDataset(Dataset):
-    def __init__(self, X, y, tokenizer,augment: Optional[str] = None):
-        self.X = X
-        self.y = y
+    def __init__(self, data_dir, tokenizer,augment: Optional[str] = None,mode: Optional[str] = "train",):
+        print("heeey")
+        df = pd.read_csv(data_dir)
+        self.X = df.X
+        self.y = df.y
         self.tokenizer = tokenizer
         self.augment = augment
 

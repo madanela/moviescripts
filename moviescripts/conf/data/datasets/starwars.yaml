@@ -1,28 +1,27 @@
 # @package data
 train_dataset:
-  _target_: moviescripts.datasets.semseg.SemanticSegmentationDataset
+  _target_: moviescripts.datasets.classification.TextClassificationDataset
   data_dir: data/processed/starwars
-  label_db_filepath: data/processed/starwars/label_database.yaml
-  data_percent: 1.0
+  tokenizer: transformers.BertTokenizer.from_pretrained("bert-base-uncased")
+
+  # label_db_filepath: data/processed/starwars/label_database.yaml
   mode: ${data.train_mode}
-  ignore_label: ${data.ignore_label}
-  num_labels: ${data.num_labels}
+  # num_labels: ${data.num_labels}
 
 validation_dataset:
-  _target_: moviescripts.datasets.classification.SemanticSegmentationDataset
+  _target_: moviescripts.datasets.classification.TextClassificationDataset
   data_dir: data/processed/starwars
-  label_db_filepath: data/processed/starwars/label_database.yaml
-  data_percent: 1.0
+  tokenizer: transformers.BertTokenizer.from_pretrained("bert-base-uncased")
+  # label_db_filepath: data/processed/starwars/label_database.yaml
   mode: ${data.validation_mode}
-  ignore_label: ${data.ignore_label}
-  num_labels: ${data.num_labels}
+  # num_labels: ${data.num_labels}
 
 
 test_dataset:
-  _target_: moviescripts.datasets.semseg.SemanticSegmentationDataset
+  _target_: moviescripts.datasets.classification.TextClassificationDataset
   data_dir: data/processed/starwars
-  label_db_filepath: data/processed/starwars/label_database.yaml
-  data_percent: 1.0
+  tokenizer: transformers.BertTokenizer.from_pretrained("bert-base-uncased")
+
+  # label_db_filepath: data/processed/starwars/label_database.yaml
   mode: ${data.test_mode}
-  ignore_label: ${data.ignore_label}
-  num_labels: ${data.num_labels}
+  # num_labels: ${data.num_labels}

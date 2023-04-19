@@ -55,7 +55,7 @@ def get_parameters(cfg: DictConfig):
         loggers[-1].log_hyperparams(
             flatten_dict(OmegaConf.to_container(cfg, resolve=True))
         )
-
+    print("logging passed!")
     model = SentenceClassifier(cfg)
     if cfg.general.checkpoint is not None:
         if cfg.general.checkpoint[-3:] == "pth":
@@ -64,7 +64,7 @@ def get_parameters(cfg: DictConfig):
             cfg, model = load_baseline_model(cfg, SentenceClassifier)
         else:
             cfg, model = load_checkpoint_with_missing_or_exsessive_keys(cfg, model)
-    
+    print("model loaded")
     # if cfg.general.checkpoint_student is not None:
     #     if cfg.general.checkpoint_student[-3:] == "pth":
     #         # loading model weights, if it has .pth in the end, it will work with it

@@ -1,6 +1,7 @@
 general:
   seed: null
   checkpoint: null
+  freeze_backbone: false # train only last layer
   project_name: moviescripts
   workspace: alen.am0161
   experiment_name: baseline
@@ -24,7 +25,7 @@ defaults:
   # - model: BertClassifer
   # - teacher_model: baseline
   # - student_model: half
-  # - metrics: miou
+  - metrics: acc
   
   - optimizer: adamw
   - scheduler: onecyclelr
