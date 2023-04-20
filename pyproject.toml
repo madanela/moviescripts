@@ -23,6 +23,7 @@ loguru = "^0.4.1"
 omegaconf = "^2.3.0"
 pytorch-lightning = "^2.0.1.post0"
 fire = "^0.2.1"
+onnx-simplifier = "^0.4.22"
 
 
 

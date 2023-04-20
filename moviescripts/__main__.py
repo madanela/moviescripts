@@ -94,11 +94,13 @@ def train(cfg : DictConfig):
         default_root_dir=str(cfg.general.save_dir),
         **cfg.trainer,
     )
+
     runner.fit(model)
-    filepath = Path(cfg.general.predict_model)
+
+    filepath = Path(cfg.predict_model._target_)
     if filepath.exists() is False:
         filepath.mkdir(parents=True, exist_ok=True)
-    input_sample = torch.randn((1, 512)),torch.randn((1, 512))
+    input_sample = torch.randn((1, 512)).int(),torch.randn((1, 512)).int()
     
     model.to_onnx(filepath, input_sample, export_params=True)
 

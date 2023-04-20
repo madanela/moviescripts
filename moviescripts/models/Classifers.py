@@ -16,7 +16,7 @@ class BertSentenceClassifier(nn.Module):
         #     param.requires_grad = False
         self.dropout_rate = 0.1
         self.lin1 = nn.Linear(768, 256)
-        self.lin_layers = nn.ModuleList([nn.Linear(256, 256) for i in range(4)])
+        self.lin_layers = nn.ModuleList([nn.Linear(256, 256) for i in range(1)])
         self.lin2 = nn.Linear(256, num_labels)
 
     def forward(self, input_ids, attention_mask):
