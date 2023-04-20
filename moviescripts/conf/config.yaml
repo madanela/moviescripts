@@ -19,19 +19,15 @@ defaults:
   - data: author_text
   - data/data_loaders: simple_loader
   - data/datasets: starwars
-
+  - predict_model: bertmodel_onnx
   # - data/collation_functions: voxelize_collate
   - logging: base
-  # - model: BertClassifer
-  # - teacher_model: baseline
-  # - student_model: half
-  - metrics: acc
+  - metrics: Accuracy
   - tokenizer: BertUncased
   - optimizer: adamw
   - scheduler: onecyclelr
   - trainer: trainer
   - callbacks: callbacks
-  # - loss: cross_entropy
 
 hydra:
   run:

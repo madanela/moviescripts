@@ -41,8 +41,9 @@ class SentenceClassifier(pl.LightningModule):
         self.ignore_label = config.data.ignore_label
         self.criterion = hydra.utils.instantiate(config.loss)
         # metrics
+        print("current config.metrics")
         self.confusion = hydra.utils.instantiate(config.metrics)
-        self.iou = Accuracy()
+        self.Accuracy = Accuracy()
         # misc
         self.labels_info = dict()
 
@@ -85,22 +86,21 @@ class SentenceClassifier(pl.LightningModule):
         input_ids.to(self.device)
         attention_mask.to(self.device)
 
-        output = self.forward(input_ids,attention_mask)
+        output = self.forward(input_ids, attention_mask)
         loss = self.criterion(output, target).unsqueeze(0)
 
-        # # getting original labels
-        # ordered_output = []
-        # for i in range(len(inverse_maps)):
-        #     # https://github.com/NVIDIA/MinkowskiEngine/issues/119
-        #     ordered_output.append(output.F[output.C[:, 0] == i])
-        # output = ordered_output
-        # for i, (out, inverse_map) in enumerate(zip(output, inverse_maps)):
-        #     out = out.max(1)[1].view(-1).detach().cpu()
-        #     output[i] = out[inverse_map].numpy()
+        # calculate accuracy
+        predicted_classes = torch.argmax(output, dim=1)
+        accuracy = torch.sum(predicted_classes == target) / float(len(target))
 
-        # self.confusion.add(np.hstack(output), np.hstack(original_labels))
+        # compute confusion matrix
+        predicted_classes = predicted_classes.detach().cpu().numpy()
+        target = target.detach().cpu().numpy()
+        self.confusion.add(predicted_classes, target)
+
         return {
-            "val_loss": loss,
+            "loss": loss,
+            "val_acc": accuracy
         }
     def configure_optimizers(self):
         optimizer = hydra.utils.instantiate(

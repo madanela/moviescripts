@@ -10,6 +10,7 @@ from uuid import uuid4
 import hydra
 import torch
 from git import Repo
+from pathlib import Path
 
 from omegaconf import DictConfig, OmegaConf
 from hashlib import md5
@@ -94,6 +95,12 @@ def train(cfg : DictConfig):
         **cfg.trainer,
     )
     runner.fit(model)
+    filepath = Path(cfg.general.predict_model)
+    if filepath.exists() is False:
+        filepath.mkdir(parents=True, exist_ok=True)
+    input_sample = torch.randn((1, 512)),torch.randn((1, 512))
+    
+    model.to_onnx(filepath, input_sample, export_params=True)
 
 
 @hydra.main(config_path="conf", config_name="config.yaml")
