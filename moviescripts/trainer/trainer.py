@@ -60,8 +60,7 @@ class SentenceClassifier(pl.LightningModule):
 
         return x
     def training_step(self, batch, batch_idx):
-        print("training step!!!")
-        print(batch)
+
         input_ids = batch[0]
         attention_mask = batch[1]
         target = batch[2]
@@ -72,13 +71,12 @@ class SentenceClassifier(pl.LightningModule):
 
         
         output = self.forward(input_ids,attention_mask)
-        loss = self.criterion(output.F, target).unsqueeze(0)
+        loss = self.criterion(output, target).unsqueeze(0)
 
         return {
             "loss": loss,
         }
     def validation_step(self, batch, batch_idx):
-        print("validation step!!!")
         input_ids = batch[0]
         attention_mask = batch[1]
         target = batch[2]
@@ -88,7 +86,7 @@ class SentenceClassifier(pl.LightningModule):
         attention_mask.to(self.device)
 
         output = self.forward(input_ids,attention_mask)
-        loss = self.criterion(output.F, target).unsqueeze(0)
+        loss = self.criterion(output, target).unsqueeze(0)
 
         # # getting original labels
         # ordered_output = []

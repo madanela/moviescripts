@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from transformers import BertForPreTraining
+from transformers import BertForPreTraining,BertForSequenceClassification
 
 
 
@@ -9,7 +9,8 @@ class BertSentenceClassifier(nn.Module):
         super(BertSentenceClassifier, self).__init__()
 
         # self.bert_freezed =  BertForPreTraining.from_pretrained('distilbert-base-uncased') #BertForSequenceClassification.from_pretrained('bert-base-uncased', problem_type="multi_label_classification")
-        self.bert_training = BertForPreTraining.from_pretrained('distilbert-base-uncased') #BertForSequenceClassification.from_pretrained('bert-base-uncased', problem_type="multi_label_classification")
+        self.bert_training = BertForSequenceClassification.from_pretrained('bert-base-uncased', problem_type="multi_label_classification").bert
+        #BertForPreTraining.from_pretrained('distilbert-base-uncased') #BertForSequenceClassification.from_pretrained('bert-base-uncased', problem_type="multi_label_classification")
         #BertForSequenceClassification.from_pretrained("bert-base-uncased", problem_type="multi_label_classification")
         # for param in self.bert_freezed.parameters():
         #     param.requires_grad = False
@@ -22,19 +23,14 @@ class BertSentenceClassifier(nn.Module):
         # bert_1 = self.bert_freezed(input_ids=input_ids, attention_mask=attention_mask)
         bert_2 = self.bert_training(input_ids=input_ids, attention_mask=attention_mask)
 
-        print("bert passed!!!")
-        x = nn.functional.relu(self.lin1(bert_2.prediction_logits))
-        print("x passed!!!")
+        x = nn.functional.relu(self.lin1(bert_2.pooler_output))
 
         x = nn.functional.dropout(x, self.dropout_rate)
-        print("x passed!!!")
 
         for lin_layer in self.lin_layers:
-            print("x passed!!!")
 
             x = nn.functional.relu(lin_layer(x))
             x = nn.functional.dropout(x, self.dropout_rate)
-        print("x passed!!!")
 
         x = self.lin2(x)
         return x

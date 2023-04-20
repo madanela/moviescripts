@@ -13,7 +13,6 @@ class StarWarsPreprocessing:
     def __init__( self,
         data_dir: str = "data/raw/starwars",out_dir = "data/processed/starwars"
         ) -> None:
-        print(os.listdir(data_dir))
         self.data_dir = Path(data_dir)
         self.out_dir = Path(out_dir)
         logger = logging.getLogger(__name__)
@@ -23,9 +22,7 @@ class StarWarsPreprocessing:
             raise FileNotFoundError
         
         if self.out_dir.exists() is False:
-            print("does not exists")
             self.out_dir.mkdir(parents=True, exist_ok=True)
-        print("finished")
 
     @logger.catch
     def preprocess(self):
@@ -35,8 +32,6 @@ class StarWarsPreprocessing:
         df_ep4 = pd.read_csv(folder_ep4, sep =' ', header=0, escapechar='\\')
         df_ep5 = pd.read_csv(folder_ep5, sep =' ', header=0, escapechar='\\')
         df_ep6 = pd.read_csv(folder_ep6, sep =' ', header=0, escapechar='\\')
-        print("second heey")
-        print(df_ep4.shape)
         Y = pd.concat([df_ep4['character'],df_ep5['character'],df_ep6['character']]).tolist()
         X = pd.concat([df_ep4['dialogue'],df_ep5['dialogue'],df_ep6['dialogue']]).tolist()
         labels = np.unique(Y)
