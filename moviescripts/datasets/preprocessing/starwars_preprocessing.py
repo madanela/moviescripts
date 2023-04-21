@@ -9,6 +9,13 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 import logging
+import re
+import random
+
+from sentence_transformers import SentenceTransformer
+from moviescripts.datasets.augmentation import AddNoise
+
+
 class StarWarsPreprocessing:
     def __init__( self,
         data_dir: str = "data/raw/starwars",out_dir = "data/processed/starwars"
@@ -23,7 +30,7 @@ class StarWarsPreprocessing:
         
         if self.out_dir.exists() is False:
             self.out_dir.mkdir(parents=True, exist_ok=True)
-
+        self.add_noise = None
     @logger.catch
     def preprocess(self):
         folder_ep4 = os.path.join(self.data_dir,"SW_EpisodeIV.txt")
@@ -37,7 +44,7 @@ class StarWarsPreprocessing:
         labels = np.unique(Y)
         label_count = [sum(i == np.array(Y)) for i in labels]
         for i,(a,b) in enumerate(zip(labels,label_count)):
-            if b < 10:
+            if b < 40:
                 labels[i] = "Other"
         labels = np.unique(labels)
         char2ind = {i:j for i,j in zip(labels,range(len(labels)))}
@@ -51,7 +58,8 @@ class StarWarsPreprocessing:
             else:
                 label_point = char2ind["Other"]
             new_y.append(label_point)
-
+        dict_path = self.out_dir /'dict_of_words.pickle'
+        self.add_noise = AddNoise(new_x = new_x,dict_path = dict_path,p = .7)
 
 
         # create the DataFrame
@@ -67,6 +75,49 @@ class StarWarsPreprocessing:
         # save train and test sets as separate CSV files
         train_df.to_csv(self.out_dir /"train.csv", index=False)
         test_df.to_csv(self.out_dir /"val.csv", index=False)
+
+
+        path = Path(self.out_dir / "encoded_bertdata_train.csv")
+
+        def str_to_float_list(s):
+            float_list = [float(x) for x in re.findall(r'[-+]?\d*\.\d+e[-+]?\d+|[-+]?\d+\.\d+|[-+]?\d+', s)]
+            return float_list
+
+        if not path.exists():
+            train_encoded_X = []
+            train_encoded_X_y = []
+            val_encoded_X = []
+            val_encoded_X_y = []
+
+            temp = list(zip(new_x, new_y))
+            random.shuffle(temp)
+            new_x, new_y = zip(*temp)
+            # res1 and res2 come out as tuples, and so must be converted to lists.
+            new_x, new_y = list(new_x), list(new_y)
+            
+            model = SentenceTransformer('bert-base-nli-mean-tokens')
+
+            #number of random tests
+            for _ in range(10):
+                for x,y in zip(new_x[:2000],new_y[:2000]):
+                    x = model.encode(self.add_noise(x))
+                    train_encoded_X.append(x)
+                    train_encoded_X_y.append(y)
+                #number of random tests
+            for x,y in zip(new_x[2000:],new_y[2000:]):
+                x = model.encode(x)
+                val_encoded_X.append(x)
+                val_encoded_X_y.append(y)
+            pd.DataFrame({"X":train_encoded_X,"y":train_encoded_X_y}).to_csv(self.out_dir / "encoded_bertdata_train.csv")
+            pd.DataFrame({"X":val_encoded_X,"y":val_encoded_X_y}).to_csv(self.out_dir / "encoded_bertdata_val.csv")
+        else:
+            df_train = pd.read_csv(self.out_dir / "encoded_bertdata_train.csv")     
+            df_val = pd.read_csv(self.out_dir / "encoded_bertdata_val.csv")        
+        
+            train_encoded_X = df_train["X"].apply(str_to_float_list)
+            train_encoded_X_y = df_train["y"]
+            val_encoded_X = df_val["X"].apply(str_to_float_list)
+            val_encoded_X_y = df_val["y"]
 
 
 if __name__ == "__main__":

@@ -9,7 +9,20 @@ from moviescripts.datasets.augmentation import AddNoise
 import pandas as pd
 import numpy as np
 
+class TextClassificationEncodedDataset(Dataset):
+    def __init__(self, X, y):
+        self.X = X
+        self.y = y
 
+    def __len__(self):
+        return len(self.X)
+
+    def __getitem__(self, idx):
+
+        text = self.X[idx]
+        label = self.y[idx]
+        return torch.tensor(text), torch.tensor(label)
+    
 class TextClassificationDataset(Dataset):
     def __init__(self, data_dir, 
                  tokenizer,augment: Optional[str] = None,

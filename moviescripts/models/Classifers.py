@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
-from transformers import BertForPreTraining,BertForSequenceClassification,SentenceTransformer
+from transformers import BertForPreTraining,BertForSequenceClassification
+from sentence_transformers import SentenceTransformer
 
 
 
@@ -12,8 +13,8 @@ class BertSentenceClassifier(nn.Module):
         self.bert_training = BertForSequenceClassification.from_pretrained('bert-base-uncased', problem_type="multi_label_classification").bert
         #BertForPreTraining.from_pretrained('distilbert-base-uncased') #BertForSequenceClassification.from_pretrained('bert-base-uncased', problem_type="multi_label_classification")
         #BertForSequenceClassification.from_pretrained("bert-base-uncased", problem_type="multi_label_classification")
-        # for param in self.bert_freezed.parameters():
-        #     param.requires_grad = False
+        for param in self.bert_training.parameters():
+            param.requires_grad = False
         self.dropout_rate = 0.1
         self.lin1 = nn.Linear(768, 256)
         self.lin_layers = nn.ModuleList([nn.Linear(256, 256) for i in range(1)])

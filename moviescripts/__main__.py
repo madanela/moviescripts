@@ -65,14 +65,7 @@ def get_parameters(cfg: DictConfig):
             cfg, model = load_baseline_model(cfg, SentenceClassifier)
         else:
             cfg, model = load_checkpoint_with_missing_or_exsessive_keys(cfg, model)
-    # if cfg.general.checkpoint_student is not None:
-    #     if cfg.general.checkpoint_student[-3:] == "pth":
-    #         # loading model weights, if it has .pth in the end, it will work with it
-    #         # as if it work with original Minkowski weights
-    #         cfg, model = load_baseline_Student_model(cfg, SemanticSegmentation)
-    #     else:
-    #         cfg, model = load_checkpoint_with_missing_or_exsessive_keys(cfg, model)
-
+ 
     logger.info(flatten_dict(OmegaConf.to_container(cfg, resolve=True)))
     return cfg, model, loggers
 
