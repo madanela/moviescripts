@@ -4,15 +4,17 @@ from typing import List, Optional, Tuple, Union
 
 import torch
 from torch.utils.data import Dataset
-from moviescripts.datasets.augmentation import AddNoise
+from moviescripts.datasets.augmentation import AddNoise,str_to_float_list
 
 import pandas as pd
 import numpy as np
 
 class TextClassificationEncodedDataset(Dataset):
-    def __init__(self, X, y):
-        self.X = X
-        self.y = y
+    def __init__(self,data_dir,mode: Optional[str] = "train"):
+        df = pd.read_csv(data_dir)
+
+        self.X = df.X
+        self.y = df.y
 
     def __len__(self):
         return len(self.X)
@@ -21,8 +23,16 @@ class TextClassificationEncodedDataset(Dataset):
 
         text = self.X[idx]
         label = self.y[idx]
-        return torch.tensor(text), torch.tensor(label)
-    
+        return torch.tensor(str_to_float_list(text)), torch.tensor(label)
+    @property
+    def data(self):
+        """ database file containing information about preproscessed dataset """
+        return self._data
+
+    @property
+    def label_info(self):
+        """ database file containing information labels used by dataset """
+        return self.y
 class TextClassificationDataset(Dataset):
     def __init__(self, data_dir, 
                  tokenizer,augment: Optional[str] = None,

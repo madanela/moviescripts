@@ -1,0 +1,25 @@
+# @package data
+train_dataset:
+  _target_: moviescripts.datasets.classification.TextClassificationEncodedDataset
+  data_dir: data/processed/starwars/encoded_bertdata_train.csv
+
+  # label_db_filepath: data/processed/starwars/label_database.yaml
+  mode: ${data.train_mode}
+  # num_labels: ${data.num_labels}
+
+validation_dataset:
+  _target_: moviescripts.datasets.classification.TextClassificationEncodedDataset
+  data_dir: data/processed/starwars/encoded_bertdata_val.csv
+
+  # label_db_filepath: data/processed/starwars/label_database.yaml
+  mode: ${data.validation_mode}
+  # num_labels: ${data.num_labels}
+
+
+test_dataset:
+  _target_: moviescripts.datasets.classification.TextClassificationEncodedDataset
+  data_dir: data/processed/starwars/encoded_bertdata_val.csv
+
+  # label_db_filepath: data/processed/starwars/label_database.yaml
+  mode: ${data.test_mode}
+  # num_labels: ${data.num_labels}

@@ -19,7 +19,9 @@ from moviescripts import __version__
 from moviescripts.utils.utils import (
     flatten_dict,load_baseline_model,load_checkpoint_with_missing_or_exsessive_keys
 )
-from moviescripts.trainer.trainer import SentenceClassifier
+from moviescripts.trainer.trainer import SentenceClassifier,SentenceClassifierEncoded
+from sentence_transformers import SentenceTransformer
+
 from pytorch_lightning import Trainer, seed_everything
 
 
@@ -57,17 +59,38 @@ def get_parameters(cfg: DictConfig):
             flatten_dict(OmegaConf.to_container(cfg, resolve=True))
         )
     print("logging passed!")
-    model = SentenceClassifier(cfg)
+    model = SentenceClassifierEncoded(cfg)
     if cfg.general.checkpoint is not None:
         if cfg.general.checkpoint[-3:] == "pth":
             # loading model weights, if it has .pth in the end, it will work with it
             # as if it work with original Minkowski weights
-            cfg, model = load_baseline_model(cfg, SentenceClassifier)
+            cfg, model = load_baseline_model(cfg, SentenceClassifierEncoded)
         else:
             cfg, model = load_checkpoint_with_missing_or_exsessive_keys(cfg, model)
  
     logger.info(flatten_dict(OmegaConf.to_container(cfg, resolve=True)))
     return cfg, model, loggers
+
+
+def predict(model_path: str, inputs: str) -> str:
+    # load the saved model
+    model = SentenceClassifierEncoded.load_from_checkpoint(model_path)
+    model.freeze()
+    encoder_model = SentenceTransformer('bert-base-nli-mean-tokens')
+
+    model_input = encoder_model.encode(inputs)
+
+    inputs = model(model_input)
+
+
+    # process the input
+    # ...
+
+    # make predictions
+    # ...
+
+    # return the predicted output
+    return predicted_output
 
 
 @hydra.main(config_path="conf", config_name="config.yaml")
@@ -90,16 +113,10 @@ def train(cfg : DictConfig):
 
     runner.fit(model)
 
-    filepath = Path(cfg.predict_model._target_)
-    if filepath.exists() is False:
-        filepath.mkdir(parents=True, exist_ok=True)
-    input_sample = torch.randn((1, 512)).int(),torch.randn((1, 512)).int()
-    
-    model.to_onnx(filepath, input_sample, export_params=True)
 
 
 @hydra.main(config_path="conf", config_name="config.yaml")
-def test(cfg : DictConfig):
+def test(cfg : DictConfig): 
     # because hydra wants to change dir for some reason
     os.chdir(hydra.utils.get_original_cwd())
     cfg, model ,loggers = get_parameters(cfg)
@@ -113,3 +130,5 @@ def test(cfg : DictConfig):
     )
     runner.test(model)
 train()
+
+

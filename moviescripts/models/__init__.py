@@ -1,2 +1,2 @@
-from moviescripts.models.Classifers import BertSentenceClassifier
+from moviescripts.models.Classifers import BertSentenceClassifier,BertSentenceClassifier_MeanSentence
 
