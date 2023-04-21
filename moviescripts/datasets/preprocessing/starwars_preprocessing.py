@@ -9,11 +9,10 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 import logging
-import re
 import random
-
+import pickle5 as pickle
 from sentence_transformers import SentenceTransformer
-from moviescripts.datasets.augmentation import AddNoise
+from moviescripts.datasets.augmentation import AddNoise,str_to_float_list
 
 
 class StarWarsPreprocessing:
@@ -49,6 +48,9 @@ class StarWarsPreprocessing:
         labels = np.unique(labels)
         char2ind = {i:j for i,j in zip(labels,range(len(labels)))}
         ind2char = {j:i for i,j in zip(labels,range(len(labels)))}
+
+        self.save_dict(self.out_dir / "char2ind.pickle",char2ind)
+        self.save_dict(self.out_dir / "ind2char.pickle",ind2char)
         new_x = X.copy()
         new_y = []
         for idx in range(len(new_x)):
@@ -79,9 +81,7 @@ class StarWarsPreprocessing:
 
         path = Path(self.out_dir / "encoded_bertdata_train.csv")
 
-        def str_to_float_list(s):
-            float_list = [float(x) for x in re.findall(r'[-+]?\d*\.\d+e[-+]?\d+|[-+]?\d+\.\d+|[-+]?\d+', s)]
-            return float_list
+
 
         if not path.exists():
             train_encoded_X = []
@@ -119,6 +119,12 @@ class StarWarsPreprocessing:
             val_encoded_X = df_val["X"].apply(str_to_float_list)
             val_encoded_X_y = df_val["y"]
 
-
+    def save_dict(data_path, dict):
+        with open(data_path, 'wb') as handle:
+            pickle.dump(dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    def load_dict(data_path):
+        with open(data_path, 'rb') as handle:
+            dict = pickle.load(handle)
+            return dict
 if __name__ == "__main__":
     Fire(StarWarsPreprocessing)

@@ -14,11 +14,11 @@ general:
   accelerator: ???
 
 defaults:
-  - model: BertClassifer
+  - model: BertEncodedClassifer
   - loss: cross_entropy
   - data: author_text
   - data/data_loaders: simple_loader
-  - data/datasets: starwars
+  - data/datasets: starwars_encoded
   - predict_model: bertmodel_onnx
   # - data/collation_functions: voxelize_collate
   - logging: base

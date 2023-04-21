@@ -1,8 +1,10 @@
 from typing import List, Optional, Tuple, Union
 import os, pickle, numpy as np, fasttext.util, nltk, random
 from nltk.corpus import wordnet
-
-
+import re
+def str_to_float_list(s):
+    float_list = [float(x) for x in re.findall(r'[-+]?\d*\.\d+e[-+]?\d+|[-+]?\d+\.\d+|[-+]?\d+', s)]
+    return float_list
 
 class AddNoise:
     def __init__(self,new_x, p=0.2 ,dict_path = 'dict_of_words.pickle', cfg: Optional[str] = None):
