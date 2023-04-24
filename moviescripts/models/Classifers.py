@@ -40,9 +40,9 @@ class BertSentenceClassifier_MeanSentence(nn.Module):
     def __init__(self, num_labels):
         super(BertSentenceClassifier_MeanSentence, self).__init__()
 
-        self.dropout_rate = 0.1
+        self.dropout_rate = 0.3
         self.lin1 = nn.Linear(768, 256)
-        self.lin_layers = nn.ModuleList([nn.Linear(256, 256) for i in range(4)])
+        self.lin_layers = nn.ModuleList([nn.Linear(256, 256) for i in range(1)])
         self.lin2 = nn.Linear(256, num_labels)
 
     def forward(self, text):
@@ -58,4 +58,5 @@ class BertSentenceClassifier_MeanSentence(nn.Module):
             x = nn.functional.dropout(x, self.dropout_rate)
 
         x = self.lin2(x)
+        x = nn.functional.softmax(x)
         return x

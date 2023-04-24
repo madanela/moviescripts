@@ -119,10 +119,10 @@ class StarWarsPreprocessing:
             val_encoded_X = df_val["X"].apply(str_to_float_list)
             val_encoded_X_y = df_val["y"]
 
-    def save_dict(data_path, dict):
+    def save_dict(self,data_path, dict):
         with open(data_path, 'wb') as handle:
             pickle.dump(dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
-    def load_dict(data_path):
+    def load_dict(self,data_path):
         with open(data_path, 'rb') as handle:
             dict = pickle.load(handle)
             return dict

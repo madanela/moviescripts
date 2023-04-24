@@ -125,6 +125,30 @@ class SentenceClassifierEncoded(pl.LightningModule):
 
         self.log_dict(results)
         self.confusion.reset()
+    def test_step(self, batch, batch_idx):
+        data = batch[0]
+        target = batch[1]
+    
+        data.to(self.device)
+
+        output = self.forward(data)
+
+        loss = self.criterion(output, target).unsqueeze(0)
+        
+        # calculate accuracy
+        predicted_classes = torch.argmax(output, dim=1)
+        accuracy = torch.sum(predicted_classes == target) / float(len(target))
+
+        # compute confusion matrix
+        predicted_classes = predicted_classes.detach().cpu().numpy()
+
+        # target = target.detach().cpu().numpy()
+        self.confusion.add(predicted_classes, target)
+
+        return {
+            "test_loss": loss[0],
+            "test_acc": accuracy
+        }
     # def test_step(self, batch, batch_idx):
     #     data, target = batch
     #     inverse_maps = data.inverse_maps

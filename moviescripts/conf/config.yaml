@@ -1,6 +1,6 @@
 general:
   seed: null
-  checkpoint: null
+  checkpoint: saved/baseline/2023-04-23_0116/2edfc897/c308610c_a3d2/checkpoints/epoch=19-step=50000.ckpt
   freeze_backbone: false # train only last layer
   project_name: moviescripts
   workspace: alen.am0161
@@ -12,6 +12,7 @@ general:
   version: 0.1.1 # md5[:8] of config
   devices: ???
   accelerator: ???
+  version_base: None
 
 defaults:
   - model: BertEncodedClassifer

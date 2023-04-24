@@ -10,7 +10,7 @@ test_mode: validation
 
 # dataset
 in_channels: 512
-num_labels: 24
+num_labels: 10
 ignore_label: 255
 
 # data loader
