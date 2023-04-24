@@ -5,8 +5,8 @@ stages:
       preprocess  --data_dir=data/raw/starwars --out_dir=data/processed/starwars
     deps:
     - path: moviescripts/datasets/preprocessing/starwars_preprocessing.py
-      md5: 373fecd7ae599c6a45b3153de696fc8f
-      size: 4892
+      md5: 6177a6f8663de11730d21cfe5b3849dc
+      size: 5187
     outs:
     - path: data/processed/starwars/train.csv
       md5: 0c9137c9db1144883fc9f5c6d321106f
