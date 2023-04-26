@@ -29,7 +29,7 @@ Run
 ```yaml
 poetry run test
 ```
-For Pytest, by our init tests
+For Pytest, by our Unit tests
 
 ```yaml
 poetry run pytest
