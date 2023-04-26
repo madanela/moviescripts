@@ -59,6 +59,7 @@ def get_parameters(cfg: DictConfig):
         )
     print("logging passed!")
     model = SentenceClassifierEncoded(cfg)
+    print("stuck")
     if cfg.general.checkpoint is not None:
         if cfg.general.checkpoint[-3:] == "pth":
             # loading model weights, if it has .pth in the end, it will work with it
@@ -142,35 +143,6 @@ def train(cfg : DictConfig):
 
     runner.fit(model)
 
-# import pytest
-
-# @pytest.fixture
-# def model():
-#     return SentenceClassifierEncoded()
-
-# def test_model_shape(model):
-#     batch_size = 32
-#     num_tokens = 100
-#     input_tensor = torch.rand((batch_size, num_tokens))
-#     output = model(input_tensor)
-#     assert output.shape == (batch_size, 2) # assuming binary classification
-
-# def test_model_output_range(model):
-#     batch_size = 32
-#     num_tokens = 100
-#     input_tensor = torch.rand((batch_size, num_tokens))
-#     output = model(input_tensor)
-#     assert (output >= 0).all() and (output <= 1).all() # assuming sigmoid activation
-
-# def test_model_loss(model):
-#     batch_size = 32
-#     num_tokens = 100
-#     input_tensor = torch.rand((batch_size, num_tokens))
-#     target = torch.randint(0, 2, (batch_size,)).float()
-#     loss_fn = torch.nn.BCEWithLogitsLoss()
-#     output = model(input_tensor)
-#     loss = loss_fn(output.view(-1), target)
-#     assert loss >= 0
 
 @hydra.main(config_path="conf", config_name="config.yaml",version_base = "1.1")
 def test(cfg : DictConfig): 
@@ -179,15 +151,8 @@ def test(cfg : DictConfig):
     cfg, model ,loggers = get_parameters(cfg)
     
 
-    # Unit Tests
 
-
-    predict(cfg,inputs = "We win, must!")
-    predict(cfg,inputs = "We are here again. Also, I am Yoda. Jedi master!!!")
-
-
-
-    # Integration Tests
+    # Integration and Model Tests
     runner = Trainer(
         devices=cfg.general.devices,
         accelerator=cfg.general.accelerator,

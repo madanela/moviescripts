@@ -37,11 +37,11 @@ class BertSentenceClassifier(nn.Module):
         return x
 
 class BertSentenceClassifier_MeanSentence(nn.Module):
-    def __init__(self, num_labels):
+    def __init__(self, num_labels,in_channels):
         super(BertSentenceClassifier_MeanSentence, self).__init__()
 
         self.dropout_rate = 0.3
-        self.lin1 = nn.Linear(768, 256)
+        self.lin1 = nn.Linear(in_channels, 256)
         self.lin_layers = nn.ModuleList([nn.Linear(256, 256) for i in range(1)])
         self.lin2 = nn.Linear(256, num_labels)
 

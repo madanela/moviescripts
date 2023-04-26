@@ -20,7 +20,7 @@ def flatten_dict(d, parent_key="", sep="_"):
 
 def load_baseline_model(cfg, model):
     # if it is Minkoski weights
-    cfg.model.in_channels = 512
+    cfg.model.in_channels = 768
 
     model = model(cfg)
     state_dict = torch.load(cfg.general.checkpoint)["state_dict"]

@@ -9,7 +9,7 @@ validation_mode: validation
 test_mode: validation
 
 # dataset
-in_channels: 512
+in_channels: 768
 num_labels: 10
 ignore_label: 255
 

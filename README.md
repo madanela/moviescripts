@@ -24,7 +24,16 @@ Train moviescripts Bert model on the star wars dataset
 poetry run train
 ```
 ## Testing
+For config, and model tests
+Run
 ```yaml
 poetry run test
 ```
+For Pytest, by our init tests
+
+```yaml
+poetry run pytest
+```
+
+
 

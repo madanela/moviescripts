@@ -38,7 +38,7 @@ jupyter_for_experiments/saved_model.pt
 
 # chache
 __pycache__/
-
+# .dvc/
 
 # Data
 /saved
