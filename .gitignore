@@ -22,6 +22,8 @@ Tests
 
 .DS_Store
 
+# API key
+enviroment.sh
 
 # vocab
 

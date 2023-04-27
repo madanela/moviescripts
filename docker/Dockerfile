@@ -1,6 +1,6 @@
 FROM homebrew/brew:4.0.14
 
-WORKDIR /home/mlops
+WORKDIR /app
 
 RUN brew install pyenv pyenv-virtualenv
 
@@ -26,9 +26,11 @@ RUN sudo apt install -y \
     xz-utils \
     zlib1g-dev
 
+
+
 RUN brew install poetry
+COPY pyproject.toml poetry.lock ./
 RUN poetry install
 
 COPY . .
-
 CMD [ "poetry", "run", "train" ]
