@@ -1,5 +1,5 @@
 deterministic: true
-max_epochs: 100
+max_epochs: 300
 min_epochs: 1
 # resume_from_checkpoint: null
 check_val_every_n_epoch: 5
