@@ -53,10 +53,26 @@ def get_parameters(cfg: DictConfig):
     cfg.general.version = md5(str(params).encode("utf-8")).hexdigest()[:8] + unique_id
     print("version: ",cfg.general.version)
     for log in cfg.logging:
-        loggers.append(hydra.utils.instantiate(log))
-        loggers[-1].log_hyperparams(
-            flatten_dict(OmegaConf.to_container(cfg, resolve=True))
-        )
+        if "NeptuneLogger" in log._target_:
+            loggers.append(
+                hydra.utils.instantiate(
+                    log, api_key=os.environ.get("NEPTUNE_API_TOKEN"), params=params,
+                )
+            )
+            print(loggers[0])
+            print("hey logger version ",loggers[-1].version)
+            if loggers[-1].version is None:
+                loggers[-1].version = "First"
+            print("hey logger version ",loggers[-1].version)
+
+            if "offline" not in loggers[-1].version:
+                cfg.general.version = loggers[-1].version
+        else:
+            loggers.append(hydra.utils.instantiate(log))
+            loggers[-1].log_hyperparams(
+                flatten_dict(OmegaConf.to_container(cfg, resolve=True))
+            )
+        
     print("logging passed!")
     model = SentenceClassifierEncoded(cfg)
     print("stuck")

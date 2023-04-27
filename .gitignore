@@ -27,6 +27,7 @@ Tests
 
 *.bin
 *.gz
+*.part
 
 # saved model
 jupyter_for_experiments/saved_model
