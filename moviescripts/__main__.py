@@ -75,7 +75,6 @@ def get_parameters(cfg: DictConfig):
         
     print("logging passed!")
     model = SentenceClassifierEncoded(cfg)
-    print("stuck")
     if cfg.general.checkpoint is not None:
         if cfg.general.checkpoint[-3:] == "pth":
             # loading model weights, if it has .pth in the end, it will work with it

@@ -1,4 +1,3 @@
-# @package _group_
 _target_: moviescripts.models.BertSentenceClassifier_MeanSentence
 # config:
 #   dialations: [1, 1, 1, 1]

@@ -31,9 +31,7 @@ class SentenceClassifierEncoded(pl.LightningModule):
 
 
         # model
-        print("stuck")
         self.model = hydra.utils.instantiate(config.model)
-        print("stuck")
         self.optional_freeze = nullcontext
         if config.general.freeze_backbone:
             self.optional_freeze = torch.no_grad
