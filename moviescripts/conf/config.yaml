@@ -1,6 +1,6 @@
 general:
   seed: null
-  checkpoint: null #saved/baseline/2023-04-23_0116/2edfc897/c308610c_a3d2/checkpoints/epoch=19-step=50000.ckpt
+  checkpoint: saved/baseline/2023-04-23_0116/2edfc897/c308610c_a3d2/checkpoints/epoch=19-step=50000.ckpt
   freeze_backbone: false # train only last layer
   project_name: moviescripts
   workspace: alen.am0161

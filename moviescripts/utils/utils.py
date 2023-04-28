@@ -1,6 +1,9 @@
 from collections import MutableMapping
 
 import torch
+import os
+from pathlib import Path
+
 from loguru import logger
 
 
@@ -30,17 +33,18 @@ def load_baseline_model(cfg, model):
 
 
 def load_checkpoint_with_missing_or_exsessive_keys(cfg, model):
-    state_dict = torch.load(cfg.general.checkpoint)["state_dict"]
+    checkpoint_path = ".." / Path(cfg.general.checkpoint)
+
+    state_dict = torch.load(checkpoint_path)["state_dict"]
     correct_dict = dict(model.state_dict())
 
     # if parametrs not found in checkpoint they will be randomly initialized
     for key in state_dict.keys():
         if correct_dict.pop(key, None) is None:
-            print("eh")
             logger.warning(f"Key not found, it will be initialized randomly: {key}")
 
     # if parametrs have different shape, it will randomly initialize
-    state_dict = torch.load(cfg.general.checkpoint)["state_dict"]
+    state_dict = torch.load(checkpoint_path)["state_dict"]
     correct_dict = dict(model.state_dict())
     for key in correct_dict.keys():
         if state_dict[key].shape != correct_dict[key].shape:

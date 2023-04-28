@@ -51,7 +51,6 @@ def get_parameters(cfg: DictConfig):
     # create unique id for experiments that are run locally
     unique_id = "_" + str(uuid4())[:4]
     cfg.general.version = md5(str(params).encode("utf-8")).hexdigest()[:8] + unique_id
-    print("version: ",cfg.general.version)
     for log in cfg.logging:
         if "NeptuneLogger" in log._target_:
             loggers.append(
@@ -59,11 +58,9 @@ def get_parameters(cfg: DictConfig):
                     log, api_key=os.environ.get("NEPTUNE_API_TOKEN"), params=params,
                 )
             )
-            print(loggers[0])
-            print("hey logger version ",loggers[-1].version)
+
             if loggers[-1].version is None:
                 loggers[-1].version = "First"
-            print("hey logger version ",loggers[-1].version)
 
             if "offline" not in loggers[-1].version:
                 cfg.general.version = loggers[-1].version
@@ -73,7 +70,6 @@ def get_parameters(cfg: DictConfig):
                 flatten_dict(OmegaConf.to_container(cfg, resolve=True))
             )
         
-    print("logging passed!")
     model = SentenceClassifierEncoded(cfg)
     if cfg.general.checkpoint is not None:
         if cfg.general.checkpoint[-3:] == "pth":
@@ -86,56 +82,8 @@ def get_parameters(cfg: DictConfig):
     logger.info(flatten_dict(OmegaConf.to_container(cfg, resolve=True)))
     return cfg, model, loggers
 
-def load_dict(data_path):
-    with open(data_path, 'rb') as handle:
-        dict = pickle.load(handle)
-        return dict
-def predict(cfg: DictConfig,inputs: str) -> str:
 
 
-    encoder_model = SentenceTransformer('bert-base-nli-mean-tokens')
-
-    model_input = encoder_model.encode(inputs)
-    
-
-    out_dir = Path("data/processed/starwars")
-    char2ind =  load_dict(out_dir / "char2ind.pickle")
-    ind2char =  load_dict(out_dir / "ind2char.pickle")
-    
-
-
-
-    # load the saved model
-
-    model = SentenceClassifierEncoded(cfg)
-    if cfg.general.checkpoint is not None:
-        if cfg.general.checkpoint[-3:] == "pth":
-            # loading model weights, if it has .pth in the end, it will work with it
-            # as if it work with original Minkowski weights
-            print("loaded hhhh")
-            cfg, model = load_baseline_model(cfg, SentenceClassifierEncoded)
-        else:
-            print("loaded other")
-
-            cfg, model = load_checkpoint_with_missing_or_exsessive_keys(cfg, model)
- 
-    model.freeze()
-    print(model_input.shape)
-    out = model(torch.tensor(model_input).unsqueeze(0))
-    print(out[0])
-    print(out[0].shape)
-    print(torch.argmax(out[0]).item())
-    print(ind2char)
-    print(ind2char[torch.argmax(out[0]).item()])
-
-    # process the input
-    # ...
-
-    # make predictions
-    # ...
-
-    # return the predicted output
-    return out
 
 
 @hydra.main(config_path="conf", config_name="config.yaml",version_base = "1.1")

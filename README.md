@@ -36,4 +36,11 @@ poetry run pytest
 ```
 
 
+API test is under moviescripts_api
+
+Can be tested by 
+```yaml
+poetry run python run.py
+```
+
 

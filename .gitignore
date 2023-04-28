@@ -17,12 +17,18 @@ moviescripts_env
 # Testing
 
 Tests
+jupyter_for_experiments/Final_starwars_bert.ipynb
+jupyter_for_experiments/train_bert.ipynb
+jupyter_for_experiments/starwars_bert.ipynb
+jupyter_for_experiments/dict_of_words.pickle
+local-pt-checkpoint/
 
 # macOS
 
 .DS_Store
 
 # API key
+.env
 enviroment.sh
 
 # vocab
