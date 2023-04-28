@@ -1,0 +1,42 @@
+openapi: 3.0.0 # Tells Connexion what version of the OpenAPI specification is being used
+
+info: # Begins a new ‘scope’ of information about the API being built
+  title: Star Wars Character classification by text API # A user-defined title included in the Connexion-generated UI system
+  version: '1' # A user-defined version value for the API
+
+servers: # Defines the section of the configuration containing all of the API servers.
+- url: http://{base}:5000/
+  description: API Star Wars Character classification by text. # A user-defined description of what the API provides
+  variables:
+    base:
+      default: 0.0.0.0
+
+paths: # Defines the section of the configuration containing all of the API REST endpoints.
+  /: # Defines one path of your URL endpoint.
+    get: # Defines the HTTP method this URL endpoint will respond to
+      operationId: api.controller.health # Defines the Python import path/function that will respond to HTTP GET / request
+      responses: # Defines the beginning of the expected response section.
+        '200': # Defines the section for a successful response, HTTP status code 200
+          description: API Health Status # Defines what the UI interface will display for implementation notes.
+
+  /v1/predictions/class: # Defines the URL endpoint path
+    post: # Defines the HTTP method this URL endpoint will respond to
+      operationId: api.controller.predict # Defines the Python import path/function that will respond to HTTP POST /v1/predictions/class request
+      requestBody: # Defines the expected request body
+        description: The JSON data to send in the request body # Describes what the request body should contain
+        required: true # Indicates that a request body is required
+        content: # Specifies the format of the request body
+          application/json:
+            schema:
+              type: object # Defines the structure of the request body
+              properties:
+                message: # Defines a property called 'message'
+                  type: string # Specifies that the value of 'message' should be a string
+
+      responses: # Defines the beginning of the expected response section.
+        '200': # Defines the section for a successful response, HTTP status code 200
+          description: Everything went correct!, class prediction # Defines what the UI interface will display for implementation notes.
+        '400': # Defines the section for a bad request, HTTP status code 400
+          description: Bad request, house data validation failed # Defines what the UI interface will display for implementation notes.
+        '5XX': # Defines the section for unexpected server errors, HTTP status code 5XX
+          description: Unexpected error # Defines what the UI interface will display for implementation notes.
