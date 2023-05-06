@@ -14,14 +14,14 @@ servers: # Defines the section of the configuration containing all of the API se
 paths: # Defines the section of the configuration containing all of the API REST endpoints.
   /: # Defines one path of your URL endpoint.
     get: # Defines the HTTP method this URL endpoint will respond to
-      operationId: api.controller.health # Defines the Python import path/function that will respond to HTTP GET / request
+      operationId: /api.controller.health # Defines the Python import path/function that will respond to HTTP GET / request
       responses: # Defines the beginning of the expected response section.
         '200': # Defines the section for a successful response, HTTP status code 200
           description: API Health Status # Defines what the UI interface will display for implementation notes.
 
   /v1/predictions/class: # Defines the URL endpoint path
     post: # Defines the HTTP method this URL endpoint will respond to
-      operationId: api.controller.predict # Defines the Python import path/function that will respond to HTTP POST /v1/predictions/class request
+      operationId: /api.controller.predict # Defines the Python import path/function that will respond to HTTP POST /v1/predictions/class request
       requestBody: # Defines the expected request body
         description: The JSON data to send in the request body # Describes what the request body should contain
         required: true # Indicates that a request body is required

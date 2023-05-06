@@ -5,3 +5,6 @@
 run-service-development:
 	@echo "+ $@"
 	poetry run python run.py
+run-service-wsgi:
+	@echo "+ $@"
+	gunicorn --workers=1 --bind 0.0.0.0:5000 run:application

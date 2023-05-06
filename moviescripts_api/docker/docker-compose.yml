@@ -1,9 +1,23 @@
 version: '3.8'
 services:
-  ml_api:
+  moviescripts_api:
     build:
       context: ../
       dockerfile: docker/Dockerfile
+    container_name: moviescripts_api
+
     ports:
       - "5001:5000"   # expose webserver to localhost host:container
     command: bash -c "make run-service-development"
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      
+  grafana:
+    hostname: grafana
+    image: grafana/grafana
+    ports:
+      - "3000:3000"

@@ -56,6 +56,8 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry install
 COPY . .
 
-CMD [ "poetry", "run", "test" ]
+# Following were designed for main script
 
-CMD [ "poetry", "run", "pytest" ]
+# CMD [ "poetry", "run", "test" ]
+
+# CMD [ "poetry", "run", "pytest" ]
