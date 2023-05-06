@@ -52,8 +52,12 @@ RUN pip install poetry
 ENV PATH $HOME/.poetry/bin:$PATH
 
 # Copy project files
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml ./
+
 RUN poetry install
+
+#RUN poetry install
+
 COPY . .
 
 # Following were designed for main script
